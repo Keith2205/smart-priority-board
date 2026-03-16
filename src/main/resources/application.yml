@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: smart-priority-board
+
+  data:
+    mongodb:
+      # SECURITY: Never hardcode credentials here.
+      # Set the MONGODB_URI environment variable before starting the app.
+      # Example: export MONGODB_URI="mongodb+srv://user:pass@host/db?appName=app"
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+app:
+  jwt:
+    # SECURITY: No fallback — the app will refuse to start if JWT_SECRET is not set.
+    # Generate a strong secret: openssl rand -base64 64
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000   # 24 hours
+
+  cors:
+    # Comma-separated list of allowed origins.
+    # Override via CORS_ALLOWED_ORIGINS env var in production.
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+  rate-limit:
+    # Maximum login attempts per IP within the window
+    login-max-attempts: 5
+    # Window size in milliseconds (default: 1 minute)
+    login-window-ms: 60000
+
+logging:
+  level:
+    # INFO in all environments — DEBUG would expose JWT tokens and request bodies in logs
+    com.smartboard: INFO
+    org.springframework.security: WARN
+    org.springframework.data.mongodb: WARN
